@@ -1,13 +1,21 @@
+from flask import Flask, render_template, redirect, url_for, flash, request, Blueprint
+from sqlalchemy.orm.exc import NoResultFound
+from flask_dance.consumer.backend.sqla import SQLAlchemyBackend
+from flask_dance.consumer.base import oauth_authorized
+from flask_dance.contrib.github import github
+from werkzeug.urls import url_parse
+from project import db, bcrypt, login_manager, github_blueprint
+from flask_login import login_user, login_required, current_user, logout_user
+from project.models import *
+from project.forms import *
+import os
+import dotenv
 
-
-
+users_blueprint = Blueprint('users',__name__)
 @login_manager.user_loader
 def load_user(id):
     return User.query.get(id)
 
-
-github_blueprint = make_github_blueprint(client_id=os.getenv('github_id'), client_secret=os.getenv('github_secret'))
-app.register_blueprint(github_blueprint, url_prefix='/github_login')
 
 github_blueprint.backend = SQLAlchemyBackend(OAuth, db.session, user=current_user, user_required=False)
 
@@ -15,8 +23,7 @@ github_blueprint.backend = SQLAlchemyBackend(OAuth, db.session, user=current_use
 
 
 
-
-@app.route('/signup', methods=['GET', 'POST'])
+@users_blueprint.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = UserSignup()
     if form.validate_on_submit():
@@ -28,7 +35,7 @@ def signup():
     return render_template('signup.html', form=form)
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@users_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('user_home', id=current_user.id))
@@ -111,7 +118,7 @@ def github_logged_in(blueprint, token):
     return False
 
 
-@app.route('/logout')
+@users_blueprint.route('/logout')
 @login_required
 def logout():
     logout_user()

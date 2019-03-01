@@ -1,5 +1,6 @@
-from project import db, UserMixin, OAuthConsumerMixin, bcrypt
-
+from project import db, bcrypt
+from flask_login import UserMixin
+from flask_dance.consumer.backend.sqla import OAuthConsumerMixin
 
 # user model for application authentication and authorization.
 # one to manny user to pet relationship.

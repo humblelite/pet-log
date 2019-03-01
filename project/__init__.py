@@ -1,21 +1,17 @@
-from flask import Flask, render_template, redirect, url_for, flash, request, jsonify
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm.exc import NoResultFound
-from flask_dance.consumer.backend.sqla import OAuthConsumerMixin, SQLAlchemyBackend
-from flask_dance.consumer.base import oauth_authorized
-from flask_dance.contrib.github import make_github_blueprint, github
+from flask_dance.contrib.github import make_github_blueprint
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
-from flask_login import LoginManager, UserMixin, login_user, login_required, current_user, logout_user
+from flask_login import LoginManager,current_user
 from flask_caching import Cache
 from flask_modus import Modus
 from flask_bcrypt import Bcrypt
-from werkzeug.urls import url_parse
 import dotenv
 import os
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] =os.getenv('database')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('database')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SECRET_KEY'] =os.getenv('secret_key')
 modus = Modus(app)
@@ -29,6 +25,16 @@ login_manager.login_view = 'login'
 migrate = Migrate(app, db)
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
+
+from project.users.views import users_blueprint
+from project.pets.views import pet_blueprint
+
+app.register_blueprint(users_blueprint)
+app.register_blueprint(pet_blueprint)
+
+github_blueprint = make_github_blueprint(client_id=os.getenv('github_id'), client_secret=os.getenv('github_secret'))
+app.register_blueprint(github_blueprint, url_prefix='/github_login')
+
 
 
 
@@ -54,5 +60,3 @@ def not_found(error):
 def not_found(error):
     return render_template('errors/500.html'), 500
 
-if __name__=='__main__':
-    manager.run()

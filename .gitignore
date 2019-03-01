@@ -5,3 +5,4 @@ venv/
 .idea/pet-log.iml
 .idea/workspace.xml
 .idea/vcs.xml
+.env
