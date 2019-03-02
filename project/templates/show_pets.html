@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+{% include 'includes/top_bar.html' %}
+
+  <section class="section">
+    <div class="container">
+      <h1 class="title">{{pet}}</h1>
+
+          {% for user_pet in user_pets %}
+            {% if user_pet is none%}
+                <h1>you need to add a pet</h1>
+            {% else %}
+                <ul>
+                    <li class="pet-list">
+                        <div class="column is-9">
+					        <div class="box content">
+						        <article class="pet_list">
+							        <h4 class="has-text-weight-light">{{user_pet.pet_name}}</h4>
+							        <div class="media">
+								        <div class="media-content">
+									        <div class="content">
+                                                 <p class="has-text-wight-light">{{user_pet.pet_description}}</p>
+									        </div>
+								        </div>
+								        <div class="media-right">
+                                            <span>
+                                                <a href="{{url_for('edit_pet', id=id, pet=pet,item=user_pet.pet_name)}}"  class="button is-primary is-small is-outlined ">Edit</a>
+                                            </span>
+									        <span>
+                                                <form action="{{url_for('edit_pet', id=id, pet=pet,item=user_pet.pet_name)}}?_method=DELETE" method="POST">
+                                                 <button type="submit" class="button is-primary is-small is-outlined " >DELETE</button>
+                                                </form>
+                                            </span>
+								        </div>
+							        </div>
+						        </article>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+            {% endif %}
+
+          {% endfor %}
+
+    </div>
+  </section>
+
+
+
+{% endblock %}

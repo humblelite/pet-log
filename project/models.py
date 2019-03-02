@@ -2,9 +2,10 @@ from project import db, bcrypt
 from flask_login import UserMixin
 from flask_dance.consumer.backend.sqla import OAuthConsumerMixin
 
+
 # user model for application authentication and authorization.
 # one to manny user to pet relationship.
-# has flask_login usermixin libraray.
+# has flask_login User mixin library.
 # bcrypt library to hash passwords in the init method.
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)

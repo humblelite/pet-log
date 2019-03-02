@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Virtual Pet Log</title>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+  </head>
+  <body>
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href={{url_for('index')}}>
+      <img src="static/logo.png" >
+    </a>
+
+    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+
+      <a href="https://github.com/humblelite/virtual-pet-log" class="navbar-item">
+        Documentation
+      </a>
+      <a href="{{url_for('about')}}" class="navbar-item">
+            About
+      </a>
+
+    </div>
+
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="buttons">
+          {% if current_user.is_anonymous %}
+          <a href="{{url_for('signup')}}" class="button is-primary">
+            <strong>Sign up</strong>
+          </a>
+          <a href="{{url_for('login')}}" class="button is-light">
+            Log in
+          </a>
+          {% endif %}
+          {% if not current_user.is_anonymous %}
+          <a href="{{url_for('user_home',id=current_user.id)}}" class="button is-primary">
+            <strong>Dashboard</strong>
+          </a>
+           <a href="{{url_for('logout')}}" class="button is-light">
+            Log out
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+    <div class="notification is-link has-text-centered">{{ message }}</div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+  {% block top_bar %}
+  {% endblock %}
+  {% block content %}
+  {% endblock %}
+  </body>
+
+</html>
