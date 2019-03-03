@@ -4,10 +4,10 @@
 
 <div class="container is_warning ">
     <div class="column is-two-fifths is-offset-one-quarter"> <h1 class="title is-2 has-text-centered">Pet Information</h1></div>
-      <form action="{{url_for('edit_pet', id=id, pet=pet, item=item)}}?_method=PATCH" method="POST" >
+      <form action="{{url_for('pets.edit', id=id, pet=pet, item=item)}}?_method=PATCH" method="POST" >
         {{form.hidden_tag()}}
 
-            <div class="column is-two-fifths is-offset-one-quarter has-text-white">{{form.animal_type.label.text}}: {{form.animal_type}}</div>
+            <div class="column is-two-fifths is-offset-one-quarter has-text-white">{{form.animal_type.label.text}}: {{form.animal_type(class="input is-rounded is-primary")}}</div>
           {% if form.animal_type.errors %}<div class="column is-two-fifths is-offset-one-quarter has-text-danger">{%for error in form.animal_type.errors %}<h3>{{error}}</h3>{% endfor %}</div>{% endif %}
 
            <div class="column is-two-fifths is-offset-one-quarter has-text-white">{{form.pet_name.label.text}}: {{form.pet_name( class="input is-rounded is-primary ", placeholder="Enter Pet Name")}}</div>

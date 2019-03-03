@@ -1,26 +1,26 @@
-from flask import Flask, render_template, redirect, url_for, flash, request, Blueprint
+from flask import render_template, redirect, url_for, flash, request, Blueprint
 from sqlalchemy.orm.exc import NoResultFound
-from flask_dance.consumer.backend.sqla import SQLAlchemyBackend
+from flask_dance.consumer.storage.sqla import SQLAlchemyStorage
 from flask_dance.consumer.base import oauth_authorized
 from flask_dance.contrib.github import github
+
 from werkzeug.urls import url_parse
 from project import db, bcrypt, login_manager, github_blueprint
 from flask_login import login_user, login_required, current_user, logout_user
-from project.models import *
-from project.forms import *
+from project.models import User, OAuth
+from project.forms import UserSignup, UserLogin
 import os
 import dotenv
 
 users_blueprint = Blueprint('users',__name__)
+
+
 @login_manager.user_loader
 def load_user(id):
     return User.query.get(id)
 
 
-github_blueprint.backend = SQLAlchemyBackend(OAuth, db.session, user=current_user, user_required=False)
-
-
-
+github_blueprint.backend = SQLAlchemyStorage(OAuth, db.session, user=current_user, user_required=False)
 
 
 @users_blueprint.route('/signup', methods=['GET', 'POST'])
@@ -31,14 +31,14 @@ def signup():
         db.session.add(user)
         db.session.commit()
         flash('singup is successful')
-        return redirect(url_for('login'))
+        return redirect(url_for('users.login'))
     return render_template('signup.html', form=form)
 
 
 @users_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('user_home', id=current_user.id))
+        return redirect(url_for('pets.user_home', id=current_user.id))
     form = UserLogin()
     if form.validate_on_submit():
         user = form.username.data
@@ -52,18 +52,18 @@ def login():
                 flash('you are logged in')
                 next_page = request.args.get('next')
                 if not next_page or url_parse(next_page).netloc != '':
-                    next_page = url_for('user_home', id=user_query.id)
+                    next_page = url_for('pets.user_home', id=user_query.id)
                 return redirect(next_page)
             else:
                 flash('username or password is incorrect')
-                return redirect(url_for('login'))
+                return redirect(url_for('users.login'))
         else:
             flash('username or password is incorrect')
-            return redirect(url_for('login'))
+            return redirect(url_for('users.login'))
     return render_template('login.html', form=form)
 
 
-@app.route('/github')
+@users_blueprint.route('/github')
 def github_login():
     if not github.authorized:
         return redirect(url_for('github.login'))
@@ -92,12 +92,11 @@ def github_logged_in(blueprint, token):
 
     if oauth.user:
         user_query = User.query.filter_by(id=oauth.user_id).first()
-        print(user_query)
         login_user(user_query)
         flash("logged in with github")
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
-            next_page = url_for('user_home', id=oauth.user_id)
+            next_page = url_for('pets.user_home', id=oauth.user_id)
             return redirect(next_page)
 
     else:
@@ -111,9 +110,8 @@ def github_logged_in(blueprint, token):
         flash('account created')
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
-            next_page = url_for('user_home', id=user.id)
+            next_page = url_for('pets.user_home', id=user.id)
             return redirect(next_page)
-
 
     return False
 

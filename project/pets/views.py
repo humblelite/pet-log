@@ -21,7 +21,7 @@ def user_home(id):
         pet_query = Pet(pet_cats=pet_category, pet_name=pet_name, pet_description=pet_desc, pet_user_id=id)
         db.session.add(pet_query)
         db.session.commit()
-        return redirect(url_for('user_home', id=id))
+        return redirect(url_for('pets.user_home', id=id))
     return render_template('home.html', id=id, name=current_user.username, pets=category, form=form)
 
 
@@ -36,7 +36,7 @@ def pet_type(id, pet):
 
 @pet_blueprint.route('/home/<int:id>/<pet>/<item>', methods=['GET', 'POST', 'PATCH', 'DELETE'])
 @login_required
-def edit_pet(id, pet, item):
+def edit(id, pet, item):
     category = Category.query.all()
     pet_query = Pet.query.filter_by(pet_name=item, pet_user_id=id).first()
     form = PetForm(request.form)
@@ -48,11 +48,11 @@ def edit_pet(id, pet, item):
             pet_query.pet_description = form.pet_desc.data
             db.session.add(pet_query)
             db.session.commit()
-            return redirect(url_for('user_home', id=id))
+            return redirect(url_for('pets.user_home', id=id))
     if request.method == b'DELETE':
         db.session.delete(pet_query)
         db.session.commit()
-        return redirect(url_for('user_home', id=id))
+        return redirect(url_for('pets.user_home', id=id))
 
     return render_template('edit.html', id=id, pet=pet, item=item, pets=category, form=form)
 

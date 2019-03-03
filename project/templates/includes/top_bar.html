@@ -1,13 +1,13 @@
 {% block top_bar %}
 <div class="tabs is-centered is-medium">
     <ul>
-        <li><a href="{{url_for('pet_type', id=id, pet=pets[0].cat_name)}}">{{pets[0].cat_name}}</a></li>
-        <li><a href="{{url_for('pet_type', id=id, pet=pets[1].cat_name)}}">{{pets[1].cat_name}}</a></li>
-        <li><a href="{{url_for('pet_type', id=id, pet=pets[2].cat_name)}}">{{pets[2].cat_name}}</a></li>
-        <li><a href="{{url_for('pet_type', id=id, pet=pets[3].cat_name)}}">{{pets[3].cat_name}}</a></li>
-        <li><a href="{{url_for('pet_type', id=id, pet=pets[4].cat_name)}}">{{pets[4].cat_name}}</a></li>
-        <li><a href="{{url_for('pet_type', id=id, pet=pets[5].cat_name)}}">{{pets[5].cat_name}}</a></li>
-        <li><a href="{{url_for('pet_list_json', id=id)}}">All Pets</a></li>
+        <li><a href="{{url_for('pets.pet_type', id=id, pet=pets[0].cat_name)}}">{{pets[0].cat_name}}</a></li>
+        <li><a href="{{url_for('pets.pet_type', id=id, pet=pets[1].cat_name)}}">{{pets[1].cat_name}}</a></li>
+        <li><a href="{{url_for('pets.pet_type', id=id, pet=pets[2].cat_name)}}">{{pets[2].cat_name}}</a></li>
+        <li><a href="{{url_for('pets.pet_type', id=id, pet=pets[3].cat_name)}}">{{pets[3].cat_name}}</a></li>
+        <li><a href="{{url_for('pets.pet_type', id=id, pet=pets[4].cat_name)}}">{{pets[4].cat_name}}</a></li>
+        <li><a href="{{url_for('pets.pet_type', id=id, pet=pets[5].cat_name)}}">{{pets[5].cat_name}}</a></li>
+        <li><a href="{{url_for('pets.pet_list_json', id=id)}}">All Pets</a></li>
 
     </ul>
 </div>

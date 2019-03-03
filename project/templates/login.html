@@ -3,7 +3,7 @@
 <div class="container">
   <div class="notification">
       <div class="column is-two-fifths is-offset-one-quarter"> <h1 class="title is-2 has-text-centered"> Log In</h1></div>
-      <form action="{{url_for('login')}}" method="POST">
+      <form action="{{url_for('users.login')}}" method="POST">
         {{form.hidden_tag()}}
            <div class="column is-two-fifths is-offset-one-quarter has-text-light">{{form.username.label.text}}: {{form.username( class="input is-rounded ", placeholder="Username")}}</div>
           {% if form.username.errors %}<div class="column is-two-fifths is-offset-one-quarter has-text-danger">{%for error in form.username.errors %}<h3>{{error}}</h3>{% endfor %}</div>{% endif %}
@@ -15,6 +15,9 @@
           <div class="column is-two-fifths is-offset-one-quarter">{{form.submit(class="button is-primary is-medium is-fullwidth is-inverted is-rounded")}}</div>
 
       </form>
+       <div class="column is-two-fifths is-offset-one-quarter">
+                       <a href="{{url_for('users.github_login')}}" class="button is-primary is-medium is-fullwidth is-inverted is-rounded">Login with Github</a>
+       </div>
   </div>
 </div>
 {% endblock %}

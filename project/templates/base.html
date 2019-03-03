@@ -13,7 +13,7 @@
   <nav class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <a class="navbar-item" href={{url_for('index')}}>
-      <img src="static/logo.png" >
+
     </a>
 
     <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
@@ -39,18 +39,19 @@
       <div class="navbar-item">
         <div class="buttons">
           {% if current_user.is_anonymous %}
-          <a href="{{url_for('signup')}}" class="button is-primary">
+          <a href="{{url_for('users.signup')}}" class="button is-primary">
             <strong>Sign up</strong>
           </a>
-          <a href="{{url_for('login')}}" class="button is-light">
+          <a href="{{url_for('users.login')}}" class="button is-light">
             Log in
           </a>
           {% endif %}
           {% if not current_user.is_anonymous %}
-          <a href="{{url_for('user_home',id=current_user.id)}}" class="button is-primary">
+          <span class="button is-primary is-inverted">{{current_user.username}}</span>
+          <a href="{{url_for('pets.user_home',id=current_user.id)}}" class="button is-primary">
             <strong>Dashboard</strong>
           </a>
-           <a href="{{url_for('logout')}}" class="button is-light">
+           <a href="{{url_for('users.logout')}}" class="button is-light">
             Log out
           </a>
           {% endif %}

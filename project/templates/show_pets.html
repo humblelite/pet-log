@@ -24,10 +24,10 @@
 								        </div>
 								        <div class="media-right">
                                             <span>
-                                                <a href="{{url_for('edit_pet', id=id, pet=pet,item=user_pet.pet_name)}}"  class="button is-primary is-small is-outlined ">Edit</a>
+                                                <a href="{{url_for('pets.edit', id=id, pet=pet,item=user_pet.pet_name)}}"  class="button is-primary is-small is-outlined ">Edit</a>
                                             </span>
 									        <span>
-                                                <form action="{{url_for('edit_pet', id=id, pet=pet,item=user_pet.pet_name)}}?_method=DELETE" method="POST">
+                                                <form action="{{url_for('pets.edit', id=id, pet=pet,item=user_pet.pet_name)}}?_method=DELETE" method="POST">
                                                  <button type="submit" class="button is-primary is-small is-outlined " >DELETE</button>
                                                 </form>
                                             </span>
