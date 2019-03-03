@@ -9,13 +9,7 @@ from flask_login import current_user, login_required
 
 pet_blueprint = Blueprint('pets', __name__)
 
-def pet_runner():
-    animals = ['dogs', 'cats','birds', 'fish', 'critters', 'reptiles']
-    for pet in animals:
-        adder = Category(cat_name=pet)
-        db.session.add(adder)
-        db.session.commit()
-pet_runner()
+
 
 # users dashboard allows them to  create a pet, and choose pet based on type.
 @pet_blueprint.route('/home/<int:id>', methods=['GET', 'POST'])
