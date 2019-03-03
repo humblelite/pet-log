@@ -6,3 +6,5 @@ venv/
 .idea/workspace.xml
 .idea/vcs.xml
 .env
+project/petlog.db
+project/migrations

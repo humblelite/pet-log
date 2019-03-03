@@ -1,4 +1,5 @@
-from flask import render_template, redirect, url_for, request, jsonify, Blueprint
+from flask import render_template, redirect, \
+    url_for, request, jsonify, Blueprint
 from project import db, modus, login_manager
 from project.models import *
 from project.forms import PetForm
@@ -19,25 +20,35 @@ def user_home(id):
         pet_name = form.pet_name.data
         pet_desc = form.pet_desc.data
         pet_category = form.animal_type.data
-        pet_query = Pet(pet_cats=pet_category, pet_name=pet_name, pet_description=pet_desc, pet_user_id=id)
+        pet_query = Pet(pet_cats=pet_category, pet_name=pet_name,
+                        pet_description=pet_desc, pet_user_id=id)
+
         db.session.add(pet_query)
         db.session.commit()
         return redirect(url_for('pets.user_home', id=id))
-    return render_template('pets/home.html', id=id, name=current_user.username, pets=category, form=form)
+    return render_template('pets/home.html', id=id,
+                           name=current_user.username,
+                           pets=category, form=form)
 
 
-# when user clicks on category or pet type takes user to their specific pets under that type.
+# when user clicks on category or pet type takes
+# user to their specific pets under that type.
 @pet_blueprint.route('/home/<int:id>/<pet>')
 @login_required
 def pet_type(id, pet):
     category = Category.query.all()
     pet_finder = Category.query.filter_by(cat_name=pet).first()
-    user_pets = Pet.query.filter_by(pet_user_id=id, pet_cats=pet_finder.id).all()
-    return render_template('pets/show_pets.html', id=id, pet=pet, pets=category, user_pets=user_pets)
+    user_pets = Pet.query.filter_by(pet_user_id=id,
+                                    pet_cats=pet_finder.id).all()
+
+    return render_template('pets/show_pets.html', id=id,
+                           pet=pet, pets=category,
+                           user_pets=user_pets)
 
 
 # edit pet function allows for crud operation pets to be updated and deleted.
-@pet_blueprint.route('/home/<int:id>/<pet>/<item>', methods=['GET', 'POST', 'PATCH', 'DELETE'])
+@pet_blueprint.route('/home/<int:id>/<pet>/<item>',
+                     methods=['GET', 'POST', 'PATCH', 'DELETE'])
 @login_required
 def edit(id, pet, item):
     category = Category.query.all()
@@ -57,7 +68,8 @@ def edit(id, pet, item):
         db.session.commit()
         return redirect(url_for('pets.user_home', id=id))
 
-    return render_template('pets/edit.html', id=id, pet=pet, item=item, pets=category, form=form)
+    return render_template('pets/edit.html', id=id, pet=pet,
+                           item=item, pets=category, form=form)
 
 
 # json api allows user to see all pets in json.

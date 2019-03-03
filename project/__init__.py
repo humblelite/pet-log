@@ -11,9 +11,9 @@ import dotenv
 import os
 
 app = Flask(__name__)
-# did not hide database name for project so flask migrate would work.
+# flask migrate will not work with dotenv need actual database name.
 # hidden secret key in dotenv.
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///petlog.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('database')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SECRET_KEY'] = os.getenv('secret_key')
 
@@ -38,10 +38,13 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 # used flask dance for oauth2 authentication.
-github_blueprint = make_github_blueprint(client_id=os.getenv('github_id'), client_secret=os.getenv('github_secret'))
+github_blueprint = make_github_blueprint(client_id=os.getenv('github_id'),
+                                         client_secret=os.getenv(
+                                             'github_secret'))
 app.register_blueprint(github_blueprint, url_prefix='/github_login')
 
 # blue prints from user and pet views.
+# import needs to be here to run.
 from project.users.views import users_blueprint
 from project.pets.views import pet_blueprint
 
@@ -51,7 +54,8 @@ app.register_blueprint(pet_blueprint)
 
 @app.route('/')
 def index():
-    # if statement to allow loged in users to access homepage without having to log out.
+    # if statement to allow loged in users to access
+    # homepage without having to log out.
     if not current_user.is_anonymous:
         return render_template('index.html', id=current_user.id)
     return render_template('index.html')

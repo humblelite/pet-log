@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, validators, TextAreaField, SelectField
+from wtforms import StringField, PasswordField, BooleanField, \
+    SubmitField, validators, TextAreaField, SelectField
 from wtforms.validators import DataRequired
 
 
@@ -9,16 +10,23 @@ class UserSignup(FlaskForm):
     username = StringField('username', validators=[DataRequired()])
     email = StringField('email', validators=[DataRequired(),
                                              validators.Email()])
-    password = PasswordField('password', validators=[DataRequired(),
-                                                     validators.EqualTo('confirm',
-                                                                        message='password must be the same')])
+    password = PasswordField('password',
+                             validators=[DataRequired(),
+                                         validators.EqualTo('confirm',
+                                                            message='password'
+                                                                    ' must'
+                                                                    ' be the '
+                                                                    'same')])
     confirm = PasswordField('Repeat Password')
     submit = SubmitField('submit')
 
 
 class UserLogin(FlaskForm):
-    username = StringField('Username', validators=[DataRequired('Please enter Username')])
-    password = PasswordField('Password', validators=[DataRequired('please enter password')])
+    username = StringField('Username', validators=[DataRequired
+                                                   ('Please enter Username')])
+    password = PasswordField('Password', validators=[DataRequired
+                                                     ('please'
+                                                      ' enter password')])
     remember = BooleanField('Remember Me', )
     submit = SubmitField('Submit')
 

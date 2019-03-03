@@ -22,8 +22,11 @@ def load_user(id):
     return User.query.get(id)
 
 
-# github oauth2 authentication allows users oauth model to be stored in database and accessed by flask dance.
-github_blueprint.backend = SQLAlchemyStorage(OAuth, db.session, user=current_user, user_required=False)
+# github oauth2 authentication allows users oauth model
+# to be stored in database and accessed by flask dance.
+github_blueprint.backend = SQLAlchemyStorage(OAuth, db.session,
+                                             user=current_user,
+                                             user_required=False)
 
 
 # form validates users, adds them to database and redircts to login page.
@@ -32,19 +35,23 @@ def signup():
     form = UserSignup()
     if form.validate_on_submit():
         try:
-            user = User(form.username.data, form.email.data, form.password.data)
+            user = User(form.username.data,
+                        form.email.data,
+                        form.password.data)
+
             db.session.add(user)
             db.session.commit()
             flash('singup is successful')
         except IntegrityError:
             db.session.rollback()
             flash('username or email already exist')
-            return redirect (url_for('users.signup'))
+            return redirect(url_for('users.signup'))
         return redirect(url_for('users.login'))
     return render_template('users/signup.html', form=form)
 
 
-# login  authentication verifys  users information in database and directs them to there dashboard.
+# login  authentication verifys  users
+# information in database and directs them to there dashboard.
 @users_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -55,7 +62,7 @@ def login():
         password = form.password.data
         user_query = User.query.filter_by(username=user).first()
 
-        if not user_query is None:
+        if user_query is not None:
             pw = bcrypt.check_password_hash(user_query.password, password)
             if pw is True:
                 login_user(user_query, remember=form.remember.data)
@@ -97,13 +104,16 @@ def github_logged_in(blueprint, token):
     # querys for user git hub id.
     oauth_query = OAuth.query.filter_by(provider_user_id=git_user_id)
 
-    # try and except statemment checks if user is registered and logs them in, if not registers
+    # try and except statemment checks if user is
+    # registered and logs them in, if not registers
     # users and then logs them in and redirects to dashboard.
     try:
         oauth = oauth_query.one()
         print(oauth_query, git_user_id)
     except NoResultFound:
-        oauth = OAuth(provider=blueprint.name, user_id=git_user_id, token=token, provider_user_id=git_user_id)
+        oauth = OAuth(provider=blueprint.name,
+                      user_id=git_user_id, token=token,
+                      provider_user_id=git_user_id)
 
     if oauth.user:
         user_query = User.query.filter_by(id=oauth.user_id).first()
@@ -115,7 +125,9 @@ def github_logged_in(blueprint, token):
             return redirect(next_page)
 
     else:
-        user = User(username=git_user_name, email=git_user_email, password=git_user_password)
+        user = User(username=git_user_name,
+                    email=git_user_email, password=git_user_password)
+
         oauth.user = user
         db.session.add(user)
         db.session.commit()
