@@ -15,7 +15,8 @@ app = Flask(__name__)
 # hidden secret key in dotenv.
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('database')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-app.config['SECRET_KEY'] = os.getenv('secret_key')
+SECRET_KEY = os.getenv('SECRET_KEY')
+app.config['SECRET_KEY'] = SECRET_KEY
 
 # used modus for crud methods patch and delete.
 modus = Modus(app)
