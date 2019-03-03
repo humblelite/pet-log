@@ -7,4 +7,5 @@ venv/
 .idea/vcs.xml
 .env
 project/petlog.db
-project/migrations/
+__pycache__/
+*.py[cod]
