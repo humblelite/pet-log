@@ -19,14 +19,10 @@ GITHUB_ID= os.getenv('github_id')
 GITHUB_SECRET = os.getenv('github_secret')
 
 # Configuration for database.
-if os.environ.get('ENV') == 'production':
-    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SECRET_KEY'] = SECRET_KEY
-else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///petlog.db'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-    app.config['SECRET_KEY'] = SECRET_KEY
+
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = SECRET_KEY
 
 # used modus for crud methods patch and delete.
 modus = Modus(app)
