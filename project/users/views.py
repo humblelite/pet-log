@@ -1,5 +1,6 @@
 from flask import render_template, redirect, url_for, flash, request, Blueprint
 from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import IntegrityError
 from flask_dance.consumer.storage.sqla import SQLAlchemyStorage
 from flask_dance.consumer.base import oauth_authorized
 from flask_dance.contrib.github import github
@@ -30,10 +31,15 @@ github_blueprint.backend = SQLAlchemyStorage(OAuth, db.session, user=current_use
 def signup():
     form = UserSignup()
     if form.validate_on_submit():
-        user = User(form.username.data, form.email.data, form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash('singup is successful')
+        try:
+            user = User(form.username.data, form.email.data, form.password.data)
+            db.session.add(user)
+            db.session.commit()
+            flash('singup is successful')
+        except IntegrityError:
+            db.session.rollback()
+            flash('username or email already exist')
+            return redirect (url_for('users.signup'))
         return redirect(url_for('users.login'))
     return render_template('users/signup.html', form=form)
 
