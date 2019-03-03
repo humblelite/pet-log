@@ -26,7 +26,7 @@ Once you are logged in cd /vagrant.
 ## Setup
 
 First step in setup of application is to install packages from requirements.txt file, with pip install -r requirements.txt. next create .env file and replace these variables with the correct information.
-database= your database
+DATABASE_URL= your database
 SECRET_KEY= your secret key
 GITHUB_ID= your github developer id.
 GITHUB_SECRET= your github secret key.
