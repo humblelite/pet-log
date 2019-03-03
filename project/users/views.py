@@ -13,6 +13,8 @@ from project.forms import UserSignup, UserLogin
 import os
 import dotenv
 
+
+
 users_blueprint = Blueprint('users', __name__)
 
 
@@ -99,7 +101,7 @@ def github_logged_in(blueprint, token):
     git_user_name = account_json["login"]
     git_user_email = account_json["email"]
     git_user_id = str(account_json["id"])
-    git_user_password = os.getenv('github_users_pass')
+    git_user_password = os.getenv('GITHUB_USERS_PASS')
 
     # querys for user git hub id.
     oauth_query = OAuth.query.filter_by(provider_user_id=git_user_id)
