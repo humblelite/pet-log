@@ -12,17 +12,20 @@ from project.forms import UserSignup, UserLogin
 import os
 import dotenv
 
-users_blueprint = Blueprint('users',__name__)
+users_blueprint = Blueprint('users', __name__)
 
 
+# allows users who are authenticated to access login requiered pages.
 @login_manager.user_loader
 def load_user(id):
     return User.query.get(id)
 
 
+# github oauth2 authentication allows users oauth model to be stored in database and accessed by flask dance.
 github_blueprint.backend = SQLAlchemyStorage(OAuth, db.session, user=current_user, user_required=False)
 
 
+# form validates users, adds them to database and redircts to login page.
 @users_blueprint.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = UserSignup()
@@ -32,9 +35,10 @@ def signup():
         db.session.commit()
         flash('singup is successful')
         return redirect(url_for('users.login'))
-    return render_template('signup.html', form=form)
+    return render_template('users/signup.html', form=form)
 
 
+# login  authentication verifys  users information in database and directs them to there dashboard.
 @users_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -60,9 +64,10 @@ def login():
         else:
             flash('username or password is incorrect')
             return redirect(url_for('users.login'))
-    return render_template('login.html', form=form)
+    return render_template('users/login.html', form=form)
 
 
+# allows user to use github to login into system useing flask dance.
 @users_blueprint.route('/github')
 def github_login():
     if not github.authorized:
@@ -72,18 +77,22 @@ def github_login():
 
 @oauth_authorized.connect_via(github_blueprint)
 def github_logged_in(blueprint, token):
-
     account_info = blueprint.session.get("/user")
     if not account_info.ok:
         return False
 
+    # gets json info from github
     account_json = account_info.json()
     git_user_name = account_json["login"]
     git_user_email = account_json["email"]
     git_user_id = str(account_json["id"])
     git_user_password = os.getenv('github_users_pass')
 
+    # querys for user git hub id.
     oauth_query = OAuth.query.filter_by(provider_user_id=git_user_id)
+
+    # try and except statemment checks if user is registered and logs them in, if not registers
+    # users and then logs them in and redirects to dashboard.
     try:
         oauth = oauth_query.one()
         print(oauth_query, git_user_id)
@@ -116,9 +125,9 @@ def github_logged_in(blueprint, token):
     return False
 
 
+# flask login logout function to logout users and redirct to homepage.
 @users_blueprint.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('index'))
-
