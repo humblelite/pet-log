@@ -11,12 +11,22 @@ import dotenv
 import os
 
 app = Flask(__name__)
-# flask migrate will not work with dotenv need actual database name.
-# hidden secret key in dotenv.
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('database')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+
+# ENVIRONMENT VARIABLES
 SECRET_KEY = os.getenv('SECRET_KEY')
-app.config['SECRET_KEY'] = SECRET_KEY
+DATABASE_URL = os.getenv('DATABASE_URL')
+GITHUB_ID= os.getenv('github_id')
+GITHUB_SECRET = os.getenv('github_secret')
+
+# Configuration for database.
+if os.environ.get('ENV') == 'production':
+    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SECRET_KEY'] = SECRET_KEY
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///petlog.db'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+    app.config['SECRET_KEY'] = SECRET_KEY
 
 # used modus for crud methods patch and delete.
 modus = Modus(app)
@@ -39,9 +49,8 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 # used flask dance for oauth2 authentication.
-github_blueprint = make_github_blueprint(client_id=os.getenv('github_id'),
-                                         client_secret=os.getenv(
-                                             'github_secret'))
+github_blueprint = make_github_blueprint(client_id=GITHUB_ID,
+                                         client_secret=GITHUB_SECRET)
 app.register_blueprint(github_blueprint, url_prefix='/github_login')
 
 # blue prints from user and pet views.
