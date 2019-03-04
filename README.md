@@ -51,8 +51,7 @@ final step is to verify .flaskenv file and run application on.
 flask run
 ```
 a working example is hosted at https://pet-logger.herokuapp.com/.
-the login with github button does not work on heroku because github callback url
-is set for localhost url port 8000.
+update: github oauth now works in heroku app.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
