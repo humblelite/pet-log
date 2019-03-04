@@ -15,8 +15,8 @@ app = Flask(__name__)
 # ENVIRONMENT VARIABLES
 SECRET_KEY = os.getenv('SECRET_KEY')
 DATABASE_URL = os.getenv('DATABASE_URL')
-GITHUB_ID= os.getenv('github_id')
-GITHUB_SECRET = os.getenv('github_secret')
+GITHUB_ID = os.getenv('GITHUB_ID')
+GITHUB_SECRET = os.getenv('GITHUB_SECRET')
 
 # Configuration for database.
 
