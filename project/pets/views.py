@@ -71,7 +71,7 @@ def edit(id, pet, item):
         return redirect(url_for('pets.user_home', id=id))
 
     return render_template('pets/edit.html', id=id, pet=pet,
-                           item=item, pets=category, form=form)
+                           item=item, pets=category, form=form, pet_query=pet_query)
 
 
 # json api allows user to see all pets in json.
